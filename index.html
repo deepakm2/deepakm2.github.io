@@ -1,124 +1,326 @@
-<html>
-<header>
+<!doctype html>
+<html lang="en">
 
-<script src="https://d3js.org/d3.v5.min.js"></script>
+	<head>
+		<meta charset="utf-8">
 
-<style>
+		<title>What IS on the Menu!</title>
 
-.chart rect {fill: steelblue;}
-#tooltip{
-opacity:0;
-position:absolute;
-width:60px;height=40px;
-background:white;
-border:0px;
-text-align:center;
+		<meta name="description" content="A culinary trip down the memory lane">
+		<meta name="author" content="Deepak Mishra">
 
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-}
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-</style>
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/bubble_chart.css">
 
-</header>
-<body>
-   <p> Here are magic numbers : <span id="data"></span></p>
-   <svg class="chart"></svg>
-   <div id="tooltip"> </div>
-   
-   <script>
-   var width = 120, height = 300;
-   var data = [4,8,15,16,23,42];
-   document.getElementById("data").innerHTML=data;
-   var x = d3.scaleLinear().domain([0,6]).range([0,width]);
-   var y = d3.scaleLinear().domain([0,42]).range([height,0]);
-   
-   var tooltip = d3.select("#tooltip");
-   d3.select(".chart")
-   .attr("width",width)
-   .attr("height",height)
-   .selectAll("rect").data(data).enter().append("rect")
-   .attr("width",19)
-   .attr("height",function(d){return height - y(d);})
-   .attr("x",function(d,i){return x(i);})
-   .attr("y",function(d){return y(d);})
-   .on("mouseover", function(d,i){
-     tooltip.style("opacity",1)
-	        .style("left", (d3.event.pageX)+"px")
-			.style("top", (d3.event.pageY)+"px")
-			.html("Item #"+i+" is "+d);
-   })
-   .on("mouseout", function(d,i){tooltip.style("opacity",0);})
-   
-   </script>
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
 
-<!--
+		<!-- Load D3 -->
+		<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
 
-    <div id="decoy-svg-container">
-    <svg id="decoy_viz" width="0" height="0"></svg>
-    </div>
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
 
-    <div id="svg-container">
-    <svg id="viz" width="720" height="405"></svg>
-    </div>
-	
-<script>
-
-    var width = 720;
-    var height = 405;
-
-</script>
-
-<script>
-var data = 
-[
-    {
-        "x": 30,
-        "y": 40,
-        "r": 3
-    },
-    {
-        "x": 150,
-        "y": 80,
-        "r": 2
-    },
-    {
-        "x": -180,
-        "y": -50,
-        "r": 5
-    },
-    {
-        "x": 100,
-        "y": -120,
-        "r": 10
-    },
-    {
-        "x": -10,
-        "y": 20,
-        "r": 18
-    }
-]; 
-
-//document.getElementById("data").innerHTML =  data;
+        <style>
 
 
 
-var join = d3.select("#viz").selectAll("circle").data(data);
- join.attr("cx",function(d){return (width/2)+d.x;})
-.attr("cy",function(d){return (height/2)+d.y;})
-.attr("r",function(d,i){ return (d.r/2.0);})
-.attr("fill", "green");
+            .axis {
+                stroke-width: 1px;
+                stroke: white;
+                fill:white
+                font-size: 12px;
+            }
+            .category-name {
+                font-size: 20px;
+                margin: 0 !important;
+            }
+            .key-dot {
+                display: inline-block;
+                height: 12px;
+                margin-right: .5em;
+                width: 12px;
 
- join.enter().append("circle").attr("cx",function(d){return (width/2)+d.x;})
-.attr("cy",function(d){return (height/2)+d.y;})
-.attr("r",function(d,i){ return (d.r/2.0);})
-.attr("fill", "green");
-
-join.exit().remove();
+            }
 
 
+            .Dessert { background: #FF6138}
+            .Drink { background: #FFFF9D}
+            .Food { background: #BEEB9F }
+            .Sides{ background: #00A388}
+
+            #categoryLegend{
+                overflow:hidden;
+                font-size: 15px;
+
+            }
+            #backh2{
+                color: antiquewhite;
+            }
+
+            #smallBack{
+                color: navajowhite;
+                font-style: italic;
+            }
 
 
-</script>
--->
-</body>
+            .categoryLegend {
+                float:left;
+                margin-right: 1em;
+
+            }
+
+            .area {
+                fill: orange;
+                fill-opacity: 0.6;
+                clip-path: url(#clip);
+            }
+
+            .zoom {
+                cursor: move;
+                fill: none;
+                pointer-events: all;
+            }
+
+
+        </style>
+
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal"> <!--	Reveal --->
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides"> <!-- Slide -->
+				<section>
+					<h1>What IS on the Menu!</h1>
+					<h3>A culinary trip down the memory lane</h3>
+					<p>
+						
+					</p>
+				</section>
+                <section>
+                    <section>
+                        <h2>About the Visualization</h2>
+                        <small>
+                            <p>
+                                This project uses the hybrid approach of an  <strong>Interactive Slide-Show</strong> to narrate
+                                the visual story of <strong><a
+                                    href="http://menus.nypl.org/">NYPL Menus</a> dataset</strong>.
+                                Built on <strong>scenes</strong> with <strong>annotations</strong> having  <strong>parameters</strong> connected with <strong>triggers</strong>; this slideshow follows a template for visual consistency.
+                            </p>
+                            <div class="fragment" data-fragment-index="0" class="navigate-down" style="cursor: pointer;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></div>
+
+
+                        </small>
+                    </section>
+                    <section>
+                        <h3>Elements of Narration</h3>
+
+                        <small>
+                            <ol>
+                                <li class="fragment" data-fragment-index="1"><strong>Scenes</strong></li>
+                                <p class="fragment" data-fragment-index="2">The slides that make up the presentation.
+                                    These slides can be navigated through guding arrows in the
+                                    <img src="images/arrow.png" style="border: none; background:none; box-shadow:none;" height="12" width="12"> corner.
+                                Press <em><strong>Esc</strong></em> key at any point to get an overview of all scenes.</p>
+                                <li class="fragment" data-fragment-index="3"><strong>Annotations</strong></li>
+                                <p class="fragment" data-fragment-index="4">Various <strong>tooltips</strong>, <strong>labels</strong> & <strong>legends</strong>; that display dish names and counts.</p>
+                                <li class="fragment" data-fragment-index="5"><strong>Parameters</strong></li>
+                                <p class="fragment" data-fragment-index="6">The main parameters of this story are dish <strong>names</strong>, their <strong>counts</strong> and appearance <strong>years</strong>.</p>
+                                <li class="fragment" data-fragment-index="7"><strong>Triggers</strong></li>
+                                <p class="fragment" data-fragment-index="8"><strong>Zoom and Brush</strong> filter, <strong>buttons</strong> with affordances are used to trigger updates in visuals based on new parameters.</p>
+                            </ol>
+                            <div class="fragment" data-fragment-index="9" style="cursor: pointer;"><img src="images/arrow-right.png" style="border: none; background:none; box-shadow:none;" height="60" width="60"></div>
+
+
+                            </ol>
+                        </small>
+
+                    </section>
+                </section>
+
+				<section>
+                    <section>
+                        <h2>The Dataset</h2>
+
+                        <p>With approximately 17,500 transcribed menus dating from the 1850s to the present,
+                            <a href="http://menus.nypl.org/">The New York Public Library’s restaurant menu collection</a> is one of the largest in the world, used by historians, chefs, novelists and everyday Food enthusiasts.</p>
+                        <em><small>We used cleaned dataset from <strong>CS598: Theory and Practise of Data Cleaning</strong> final project.</small>
+                        </em>
+                        <div class="fragment" data-fragment-index="10" style="cursor: pointer;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></div>
+
+                    </section>
+                    <section>
+                        <figure>
+
+                            <img src="images/frank-old.png" style="max-width:50%;max-height:60%;" alt="Portrait of Frank E. Buttolph">
+                            <br>
+                            <small><a href="http://curatingmenus.org/articles/when-a-woman-collects-menus/">Frank E. Buttolph</a>, The Woman behind Menus.</small>
+
+                        </figure>
+
+
+
+                    </section>
+
+
+                </section>
+                <section data-background="images/french-fries.jpg" data-background-transition="concave">
+
+                    <h2 id="backh2">Menu Appearances</h2>
+
+                    <div id="areaChart"></div>
+
+                    <small id="smallBack">Most of the entries are from early 1900s; courtesy Ms. Buttolph</small>
+
+                </section>
+
+
+
+
+					<section>
+						<h3>Most Popular Dishes</h3>
+						<div id="chartTop20" style="max-height:60%;"></div>
+					</section>
+
+
+
+
+                <section>
+                    <section>
+                        <small>We categorised dishes into four categories -
+                            <strong>Food</strong>, <strong>Drink</strong>, <strong>Sides</strong> and <strong>Dessert</strong>.
+                            <br>
+                            <p>Following visualisation shows their distribution grouped with how old dishes are - <strong>More than 100 years</strong>,
+                                <strong>between 75 and 100 years</strong> or <strong>less than 75 years</strong> old.</p>
+
+                        </small>
+                        <div class="fragment" data-fragment-index="9" style="cursor: pointer;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></div>
+
+                    </section>
+                    <section>
+                        <section>
+
+                            <div class="container">
+
+                                <div style="margin-left:60px;" id="toolbar">
+                                    <button id="all" class="button active">Top 250 Dishes</button>
+                                    <button id="year" class="button">Dishes by Age</button>
+                                </div>
+
+                                <div id="vis"></div>
+                                <div id="categoryLegend">
+
+                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Dessert"></span>&ensp;Dessert&ensp;
+                                    </p> </div>
+                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Drink"></span>&ensp;Drink&ensp;
+                                    </p> </div>
+                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Food"></span>&ensp;Food&ensp;
+                                    </p> </div>
+                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Sides"></span>&ensp;Sides&ensp;
+                                    </p> </div>
+                                </div>
+
+                            </div>
+
+                        </section>
+                    </section>
+                </section>
+                <section>
+                    <h3>Where now?</h3>
+                    <small>This was a very small attempt at using visuals to analyse the Menus dataset; we haven't yet visualised a very significant dimesnion
+                    for the dishes - the <strong>price</strong>; an obvious next step would be finding trends in dish prices - how prices have changed over the years?
+                        <br>
+                        Few important other parameters that came with data are - <strong>sponsor</strong> ( restaurants usually ), the <strong>occasion</strong> ( breakfast/ lunch etc ), <strong>venue</strong> (commercial, religious etc) and
+                    <strong>physical menu description</strong> of the menu itself - all of these can be visualised with help of D3 to convey more information about our culinary history.
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        Please visit <a href="http://menus.nypl.org/">NYPL Menus</a> pages to know more about this crowd-sourced project and find ways to contribute.</small>
+
+                </section>
+                <section>
+                    <h3>Credits & Acknowledgements</h3>
+
+                       <small>
+                           <ul>
+                               <li>New York Public Library  and volunteers for the Data.</li>
+                               <li>CS498 Staff for the support. Special dessert for Eric!</li>
+                               <li>CS598 Staff for Data Cleaning routines.</li>
+                               <li>Trevor Muñoz and Scholars at <a href="http://curatingmenus.org">Curating Menus</a> for reference.</li>
+                               <li>Mike Bostock for the awesome D3.</li>
+                               <li><a href="http://alignedleft.com/">Scott Murray</a> for making D3 simpler.</li>
+                               <li>Hakim El Hattab and Github community for <a href="http://lab.hakim.se/reveal-js/">Reveal.js</a></li>
+                               <li>UIUC IT Services for hosting support.</li>
+                           </ul>
+                       </small>
+                </section>
+                <section>
+                    <div style="cursor: pointer;"><img src="images/GitHub_Logo.png" style="border: none; background:none; box-shadow:none;"></div>
+                   
+
+                </section>
+
+			</div> <!-- Slide -->
+
+		</div> <!--	Reveal --->
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+
+				transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+		<script src="scripts/top20.js"></script>
+		<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+
+		<script src="scripts/areaChart.js"></script>
+        <script src="scripts/tooltip.js"></script>
+        <script src="scripts/bubble_chart.js"></script>
+
+
+
+	</body>
 </html>
