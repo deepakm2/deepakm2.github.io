@@ -1,1 +1,124 @@
-"Hello World" 
+<html>
+<header>
+
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+<style>
+
+.chart rect {fill: steelblue;}
+#tooltip{
+opacity:0;
+position:absolute;
+width:60px;height=40px;
+background:white;
+border:0px;
+text-align:center;
+
+
+}
+
+</style>
+
+</header>
+<body>
+   <p> Here are magic numbers : <span id="data"></span></p>
+   <svg class="chart"></svg>
+   <div id="tooltip"> </div>
+   
+   <script>
+   var width = 120, height = 300;
+   var data = [4,8,15,16,23,42];
+   document.getElementById("data").innerHTML=data;
+   var x = d3.scaleLinear().domain([0,6]).range([0,width]);
+   var y = d3.scaleLinear().domain([0,42]).range([height,0]);
+   
+   var tooltip = d3.select("#tooltip");
+   d3.select(".chart")
+   .attr("width",width)
+   .attr("height",height)
+   .selectAll("rect").data(data).enter().append("rect")
+   .attr("width",19)
+   .attr("height",function(d){return height - y(d);})
+   .attr("x",function(d,i){return x(i);})
+   .attr("y",function(d){return y(d);})
+   .on("mouseover", function(d,i){
+     tooltip.style("opacity",1)
+	        .style("left", (d3.event.pageX)+"px")
+			.style("top", (d3.event.pageY)+"px")
+			.html("Item #"+i+" is "+d);
+   })
+   .on("mouseout", function(d,i){tooltip.style("opacity",0);})
+   
+   </script>
+
+<!--
+
+    <div id="decoy-svg-container">
+    <svg id="decoy_viz" width="0" height="0"></svg>
+    </div>
+
+    <div id="svg-container">
+    <svg id="viz" width="720" height="405"></svg>
+    </div>
+	
+<script>
+
+    var width = 720;
+    var height = 405;
+
+</script>
+
+<script>
+var data = 
+[
+    {
+        "x": 30,
+        "y": 40,
+        "r": 3
+    },
+    {
+        "x": 150,
+        "y": 80,
+        "r": 2
+    },
+    {
+        "x": -180,
+        "y": -50,
+        "r": 5
+    },
+    {
+        "x": 100,
+        "y": -120,
+        "r": 10
+    },
+    {
+        "x": -10,
+        "y": 20,
+        "r": 18
+    }
+]; 
+
+//document.getElementById("data").innerHTML =  data;
+
+
+
+var join = d3.select("#viz").selectAll("circle").data(data);
+ join.attr("cx",function(d){return (width/2)+d.x;})
+.attr("cy",function(d){return (height/2)+d.y;})
+.attr("r",function(d,i){ return (d.r/2.0);})
+.attr("fill", "green");
+
+ join.enter().append("circle").attr("cx",function(d){return (width/2)+d.x;})
+.attr("cy",function(d){return (height/2)+d.y;})
+.attr("r",function(d,i){ return (d.r/2.0);})
+.attr("fill", "green");
+
+join.exit().remove();
+
+
+
+
+</script>
+-->
+</body>
+</html>
