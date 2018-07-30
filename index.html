@@ -1,326 +1,305 @@
 <!doctype html>
 <html lang="en">
-
-	<head>
-		<meta charset="utf-8">
-
-		<title>What IS on the Menu!</title>
-
-		<meta name="description" content="A culinary trip down the memory lane">
-		<meta name="author" content="Alok K. Shukla">
-
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/bubble_chart.css">
-
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
-
-		<!-- Load D3 -->
-		<script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
-
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-
-        <style>
-
-
-
-            .axis {
-                stroke-width: 1px;
-                stroke: white;
-                fill:white
-                font-size: 12px;
-            }
-            .category-name {
-                font-size: 20px;
-                margin: 0 !important;
-            }
-            .key-dot {
-                display: inline-block;
-                height: 12px;
-                margin-right: .5em;
-                width: 12px;
-
-            }
-
-
-            .Dessert { background: #FF6138}
-            .Drink { background: #FFFF9D}
-            .Food { background: #BEEB9F }
-            .Sides{ background: #00A388}
-
-            #categoryLegend{
-                overflow:hidden;
-                font-size: 15px;
-
-            }
-            #backh2{
-                color: antiquewhite;
-            }
-
-            #smallBack{
-                color: navajowhite;
-                font-style: italic;
-            }
-
-
-            .categoryLegend {
-                float:left;
-                margin-right: 1em;
-
-            }
-
-            .area {
-                fill: orange;
-                fill-opacity: 0.6;
-                clip-path: url(#clip);
-            }
-
-            .zoom {
-                cursor: move;
-                fill: none;
-                pointer-events: all;
-            }
-
-
-        </style>
-
-
-		<!--[if lt IE 9]>
-		<script src="lib/js/html5shiv.js"></script>
-		<![endif]-->
-	</head>
-
-	<body>
-
-		<div class="reveal"> <!--	Reveal --->
-
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides"> <!-- Slide -->
-				<section>
-					<h1>What IS on the Menu!</h1>
-					<h3>A culinary trip down the memory lane</h3>
-					<p>
-						<small>Curated by <a href="http://www.alokkumarshukla.com">Alok K. Shukla</a></small>
-					</p>
-				</section>
-                <section>
-                    <section>
-                        <h2>About the Visualization</h2>
-                        <small>
-                            <p>
-                                This project uses the hybrid approach of an  <strong>Interactive Slide-Show</strong> to narrate
-                                the visual story of <strong><a
-                                    href="http://menus.nypl.org/">NYPL Menus</a> dataset</strong>.
-                                Built on <strong>scenes</strong> with <strong>annotations</strong> having  <strong>parameters</strong> connected with <strong>triggers</strong>; this slideshow follows a template for visual consistency.
-                            </p>
-                            <div class="fragment" data-fragment-index="0" class="navigate-down" style="cursor: pointer;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></div>
-
-
-                        </small>
-                    </section>
-                    <section>
-                        <h3>Elements of Narration</h3>
-
-                        <small>
-                            <ol>
-                                <li class="fragment" data-fragment-index="1"><strong>Scenes</strong></li>
-                                <p class="fragment" data-fragment-index="2">The slides that make up the presentation.
-                                    These slides can be navigated through guding arrows in the
-                                    <img src="images/arrow.png" style="border: none; background:none; box-shadow:none;" height="12" width="12"> corner.
-                                Press <em><strong>Esc</strong></em> key at any point to get an overview of all scenes.</p>
-                                <li class="fragment" data-fragment-index="3"><strong>Annotations</strong></li>
-                                <p class="fragment" data-fragment-index="4">Various <strong>tooltips</strong>, <strong>labels</strong> & <strong>legends</strong>; that display dish names and counts.</p>
-                                <li class="fragment" data-fragment-index="5"><strong>Parameters</strong></li>
-                                <p class="fragment" data-fragment-index="6">The main parameters of this story are dish <strong>names</strong>, their <strong>counts</strong> and appearance <strong>years</strong>.</p>
-                                <li class="fragment" data-fragment-index="7"><strong>Triggers</strong></li>
-                                <p class="fragment" data-fragment-index="8"><strong>Zoom and Brush</strong> filter, <strong>buttons</strong> with affordances are used to trigger updates in visuals based on new parameters.</p>
-                            </ol>
-                            <div class="fragment" data-fragment-index="9" style="cursor: pointer;"><img src="images/arrow-right.png" style="border: none; background:none; box-shadow:none;" height="60" width="60"></div>
-
-
-                            </ol>
-                        </small>
-
-                    </section>
-                </section>
-
-				<section>
-                    <section>
-                        <h2>The Dataset</h2>
-
-                        <p>With approximately 17,500 transcribed menus dating from the 1850s to the present,
-                            <a href="http://menus.nypl.org/">The New York Public Library’s restaurant menu collection</a> is one of the largest in the world, used by historians, chefs, novelists and everyday Food enthusiasts.</p>
-                        <em><small>We used cleaned dataset from <strong>CS598: Theory and Practise of Data Cleaning</strong> final project.</small>
-                        </em>
-                        <div class="fragment" data-fragment-index="10" style="cursor: pointer;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></div>
-
-                    </section>
-                    <section>
-                        <figure>
-
-                            <img src="images/frank-old.png" style="max-width:50%;max-height:60%;" alt="Portrait of Frank E. Buttolph">
-                            <br>
-                            <small><a href="http://curatingmenus.org/articles/when-a-woman-collects-menus/">Frank E. Buttolph</a>, The Woman behind Menus.</small>
-
-                        </figure>
-
-
-
-                    </section>
-
-
-                </section>
-                <section data-background="images/french-fries.jpg" data-background-transition="concave">
-
-                    <h2 id="backh2">Menu Appearances</h2>
-
-                    <div id="areaChart"></div>
-
-                    <small id="smallBack">Most of the entries are from early 1900s; courtesy Ms. Buttolph</small>
-
-                </section>
-
-
-
-
-					<section>
-						<h3>Most Popular Dishes</h3>
-						<div id="chartTop20" style="max-height:60%;"></div>
-					</section>
-
-
-
-
-                <section>
-                    <section>
-                        <small>We categorised dishes into four categories -
-                            <strong>Food</strong>, <strong>Drink</strong>, <strong>Sides</strong> and <strong>Dessert</strong>.
-                            <br>
-                            <p>Following visualisation shows their distribution grouped with how old dishes are - <strong>More than 100 years</strong>,
-                                <strong>between 75 and 100 years</strong> or <strong>less than 75 years</strong> old.</p>
-
-                        </small>
-                        <div class="fragment" data-fragment-index="9" style="cursor: pointer;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></div>
-
-                    </section>
-                    <section>
-                        <section>
-
-                            <div class="container">
-
-                                <div style="margin-left:60px;" id="toolbar">
-                                    <button id="all" class="button active">Top 250 Dishes</button>
-                                    <button id="year" class="button">Dishes by Age</button>
-                                </div>
-
-                                <div id="vis"></div>
-                                <div id="categoryLegend">
-
-                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Dessert"></span>&ensp;Dessert&ensp;
-                                    </p> </div>
-                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Drink"></span>&ensp;Drink&ensp;
-                                    </p> </div>
-                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Food"></span>&ensp;Food&ensp;
-                                    </p> </div>
-                                    <div class="categoryLegend"> <p class="category-name"><span class="key-dot Sides"></span>&ensp;Sides&ensp;
-                                    </p> </div>
-                                </div>
-
-                            </div>
-
-                        </section>
-                    </section>
-                </section>
-                <section>
-                    <h3>Where now?</h3>
-                    <small>This was a very small attempt at using visuals to analyse the Menus dataset; we haven't yet visualised a very significant dimesnion
-                    for the dishes - the <strong>price</strong>; an obvious next step would be finding trends in dish prices - how prices have changed over the years?
-                        <br>
-                        Few important other parameters that came with data are - <strong>sponsor</strong> ( restaurants usually ), the <strong>occasion</strong> ( breakfast/ lunch etc ), <strong>venue</strong> (commercial, religious etc) and
-                    <strong>physical menu description</strong> of the menu itself - all of these can be visualised with help of D3 to convey more information about our culinary history.
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        Please visit <a href="http://menus.nypl.org/">NYPL Menus</a> pages to know more about this crowd-sourced project and find ways to contribute.</small>
-
-                </section>
-                <section>
-                    <h3>Credits & Acknowledgements</h3>
-
-                       <small>
-                           <ul>
-                               <li>New York Public Library  and volunteers for the Data.</li>
-                               <li>CS498 Staff for the support. Special dessert for Eric!</li>
-                               <li>CS598 Staff for Data Cleaning routines.</li>
-                               <li>Trevor Muñoz and Scholars at <a href="http://curatingmenus.org">Curating Menus</a> for reference.</li>
-                               <li>Mike Bostock for the awesome D3.</li>
-                               <li><a href="http://alignedleft.com/">Scott Murray</a> for making D3 simpler.</li>
-                               <li>Hakim El Hattab and Github community for <a href="http://lab.hakim.se/reveal-js/">Reveal.js</a></li>
-                               <li>UIUC IT Services for hosting support.</li>
-                           </ul>
-                       </small>
-                </section>
-                <section>
-                    <div style="cursor: pointer;"><img src="images/GitHub_Logo.png" style="border: none; background:none; box-shadow:none;"></div>
-                    <a href="https://github.com/alokkshukla/DataVisualisationProject">Source Code</a>
-
-                </section>
-
-			</div> <!-- Slide -->
-
-		</div> <!--	Reveal --->
-
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
-
-		<script>
-
-			// More info https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: true,
-				progress: true,
-				history: true,
-				center: true,
-
-
-				transition: 'convex', // none/fade/slide/convex/concave/zoom
-
-				// More info https://github.com/hakimel/reveal.js#dependencies
-				dependencies: [
-					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'plugin/zoom-js/zoom.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
-				]
-			});
-
-		</script>
-		<script src="scripts/top20.js"></script>
-		<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
-
-		<script src="scripts/areaChart.js"></script>
-        <script src="scripts/tooltip.js"></script>
-        <script src="scripts/bubble_chart.js"></script>
-
-
-
-	</body>
+   <head>
+      <meta charset="utf-8">
+      <title>USA Gun voilence</title>
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <link rel="stylesheet" href="css/reveal.css">
+      <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+      <link rel="stylesheet" href="css/reset.css">
+      <link rel="stylesheet" href="css/bubble_chart.css">
+      <link rel="stylesheet" href="lib/css/zenburn.css">
+      <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+      <script>
+         var link = document.createElement( 'link' );
+         link.rel = 'stylesheet';
+         link.type = 'text/css';
+         link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+         document.getElementsByTagName( 'head' )[0].appendChild( link );
+      </script>
+      <style>
+         .chart rect {fill: steelblue;
+         }
+         text { 
+         stroke: black; fill: black;stroke-width: 1px;}
+         .toolTip {
+         position: absolute;
+         top: 100px;
+         left: 100px;
+         -moz-border-radius:5px;
+         border-radius: 5px;
+         border: 2px solid #000;
+         background: #fff;
+         opacity: .9;
+         color: black;
+         padding: 10px;
+         width: 250px;
+         font-size: 12px;
+         z-index: 10;
+         color: black;
+         }
+         .temps
+         {
+         position: absolute;
+         display: none;
+         min-width: 80px;
+         height: auto;
+         #background: none repeat scroll 0 0 #ffffff;
+         border: 1px solid #6F257F;
+         padding: 14px;
+         text-align: center;
+         opacity: .9;
+         }
+         .axis {
+         font: 15px sans-serif;
+         }
+         .axis path,
+         .axis line {
+         fill: none;
+         stroke: #D4D8DA;
+         stroke-width: 1px;
+         shape-rendering: crispEdges;
+         }
+         .axis {
+         stroke-width: 1px;
+         stroke: white;
+         fill:white
+         font-size: 12px;
+         }
+         .category-name {
+         font-size: 20px;
+         margin: 0 !important;
+         }
+		 
+         
+         #categoryLegend{
+         overflow:hidden;
+         font-size: 15px;
+         }
+         #backh2{
+         color: antiquewhite;
+         }
+         #smallBack{
+         color: navajowhite;
+         font-style: italic;
+         }
+         .categoryLegend {
+         float:left;
+         margin-right: 1em;
+         }
+         .area {
+         fill: orange;
+         fill-opacity: 0.6;
+         clip-path: url(#clip);
+         }
+         .zoom {
+         cursor: move;
+         fill: none;
+         pointer-events: all;
+         }
+      </style>
+    
+   </head>
+   <body>
+      <div class="reveal">
+         <!--	Reveal JS --->
+          <div class="slides">
+            <!-- Slide -->
+            <section>
+               <h2>Gun problem in America !</h2>
+               <h3>Gun caused killing in USA From Jan 2013 till Mar 2018.</h3>
+               <p>
+                  <small>Created by Deepak Mishra</small>
+               </p>
+            </section>
+            <section>
+               <section>
+                  <h2>About Presentation</h2>
+                  <small>
+                     <p>
+                        This project uses the hybrid approach of an  <strong>Interactive Slide-Show</strong> to narrate
+                        the visual story of Gun Problem in America.
+                        Built on <strong>scenes</strong> with <strong>annotations</strong> having  <strong>parameters</strong> connected with <strong>triggers</strong>; this slideshow follows a template for visual consistency.
+                     </p>
+                      <div class="fragment" data-fragment-index="0"><button class="navigate-down enabled" aria-label="below slide" style="cursor: pointer;width:60px;border: none; background:none; box-shadow:none;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></button></div>
+                  </small>
+               </section>
+               <section>
+                  <h3>Elements of Narration</h3>
+                  <small>
+                     <ol>
+                        <li class="fragment" data-fragment-index="1"><strong>Scenes</strong></li>
+                        <p class="fragment" data-fragment-index="2">The slides acts as scene for this presentation.
+                           The slides can be navigated through arrows in the
+                           <img src="images/arrow.png" style="border: none; background:none; box-shadow:none;" height="12" width="12"> right corner.
+                           Press <em><strong>Esc</strong></em> key at any point to get an overview of all scenes.
+                        </p>
+                        <li class="fragment" data-fragment-index="3"><strong>Annotations</strong></li>
+                        <p class="fragment" data-fragment-index="4"> <strong>Tooltips</strong>, <strong>labels</strong> & <strong>legends</strong>; are used  as annotations as appropriate in the slides.</p>
+                        <li class="fragment" data-fragment-index="5"><strong>Parameters</strong></li>
+                        <p class="fragment" data-fragment-index="6">The main parameters of this story are <strong>names</strong> of US cities, and gun   <strong>deaths</strong> since Jan 2013 till Mar 2018.</p>
+                        <li class="fragment" data-fragment-index="7"><strong>Triggers</strong></li>
+                        <p class="fragment" data-fragment-index="8"> <strong>Buttons</strong> with affordances are used to trigger updates based on parameters for visualisation.</p>
+                     </ol>
+                     
+                     <div class="fragment" data-fragment-index="9"><button class="navigate-right" aria-label="below slide" style="cursor: pointer;width:60px;border: none; background:none; box-shadow:none;"><img src="images/arrow-right.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></button></div>
+                  </small>
+               </section>
+            </section>
+            <section>
+               <section>
+                  <h2>Gun voilence in different states of USA</h2>
+                  <small>
+                     <p>Texas and California is most affected cities with Gun Voilence. Based on the public dataset 
+                        <strong><a href="https://www.kaggle.com/jameslko/gun-violence-data">"Gun Violence Data"</a></strong>top five most affected cities are California, Texas, Florida, Illinois & Ohio.
+                     </p>
+                  </small>
+                  <div class="fragment" data-fragment-index="10"><button class="navigate-down enabled" aria-label="below slide" style="cursor: pointer;width:60px;border: none; background:none; box-shadow:none;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></button></div>
+               </section>
+               <section>
+                  <figure>
+                     <img src="images/Dashboard-Gun_Voilence_USA.png" style="max-width:70%;max-height:80%;" alt="USA Gun Voilence - Summary">
+                     <br>
+                     <small><strong>USA Gun Voilence Overview</strong></small>
+                  </figure>
+               </section>
+            </section>
+            <section>
+               <h3>TOp Gun Voilence Affected Cities of USA</h3>
+                <svg width="960" height="500" class="chart"></svg>
+               <div class="tooltip"> </div>
+            </section>
+            <section>
+               <section>
+			   <h2>GUN caused killing categorization</h2>
+                  <small>
+                     Cities are categorized in following three categories :
+                     <strong>"Low"</strong> are the cities with low gun caused deaths, <strong>"Medium"</strong> are the cities with higher gun deaths but not in the top most list, <strong>"High"</strong> are the cities which requires immediate action and have highest gun caused deaths.
+                     <br>
+                     <p>Following visualisation shows their distribution grouped in these broad categories.</p>
+                  </small>
+                  <div class="fragment" data-fragment-index="9"><button class="navigate-down enabled" aria-label="below slide" style="cursor: pointer;width:60px;border: none; background:none; box-shadow:none;"><img src="images/arrow-down.png" style="border: none; background:none; box-shadow:none;" alt="Arrow Down"></button></div>
+               </section>
+               <section>
+                  <section>
+                     <div class="container">
+                        <div style="margin-left:60px;" id="toolbar">
+                           <button id="all" class="button active">Gun death by City</button>
+                           <button id="killedCategories" class="button">Categorized view</button>
+                        </div>
+                        <div id="vis"></div>
+                        
+                     </div>
+                  </section>
+               </section>
+            </section>
+            <section>
+               <h3>References</h3>
+               <small>
+                  <ul>
+                     <li>Dataset is used from Kaggle.</li>
+                     <li>CS498 Staff for the support.</li>
+                     <li>Reveal JS : Hakim El Hattab and Github community </li>
+                     <li>bl.ocks.org : Example for D3 Bar chart and Bubble chart</li>
+                  </ul>
+               </small>
+            </section>
+       
+         </div>
+         <!-- Slide -->
+      </div>
+      <!--	Reveal --->
+      <script src="lib/js/head.min.js"></script>
+      <script src="js/reveal.js"></script>
+      <script>
+         // More info https://github.com/hakimel/reveal.js#configuration
+         Reveal.initialize({
+         	controls: true,
+         	progress: true,
+         	history: true,
+         	center: true,
+         
+         
+         	transition: 'convex', 
+         
+         	dependencies: [
+         		{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+         		{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+         		{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+         		{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+         		{ src: 'plugin/zoom-js/zoom.js', async: true },
+         		{ src: 'plugin/notes/notes.js', async: true }
+         	]
+         });
+         
+         
+         
+      </script>
+      <script>
+         var svg = d3.select(".chart"),
+             margin = {top: 20, right: 20, bottom: 30, left: 50},
+             width = +svg.attr("width") - margin.left - margin.right,
+             height = +svg.attr("height") - margin.top - margin.bottom;
+           
+         var tooltip = d3.select(".tooltip");
+         
+         var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+             y = d3.scaleLinear().rangeRound([height, 0]);
+           
+         var colours = d3.scaleOrdinal()
+             .range(["#6F257F", "#CA0D59"]);
+         
+         var g = svg.append("g")
+             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+         
+         d3.json("Data/data.json", function(error, data) {
+             if (error) throw error;
+         
+             x.domain(data.map(function(d) { return d.uscity; }));
+             y.domain([0, d3.max(data, function(d) { return d.value; })]);
+         
+             g.append("g")
+                 .attr("class", "axis axis--x")
+                 .attr("transform", "translate(0," + height + ")")
+                 .call(d3.axisBottom(x));
+         
+             g.append("g")
+               	.attr("class", "axis axis--y")
+               	.call(d3.axisLeft(y).ticks(5).tickFormat(function(d) { return parseInt(d / 1000) + "K"; }).tickSizeInner([-width]))
+               .append("text")
+                 .attr("transform", "rotate(-90)")
+                 .attr("y", 6)
+                 .attr("dy", "0.71em")
+                 .attr("text-anchor", "end")
+                 .attr("fill", "#5D6971")
+                 .text("Gun caused death ");
+         
+             g.selectAll(".bar")
+               	.data(data)
+               .enter().append("rect")
+                 .attr("x", function(d) { return x(d.uscity); })
+                 .attr("y", function(d) { return y(d.value); })
+                 .attr("width", x.bandwidth())
+                 .attr("height", function(d) { return height - y(d.value); })
+                 .attr("fill", function(d) { return colours(d.uscity); })
+                 .on("mouseover", function(d){
+                     tooltip
+                       .style("left", d3.event.pageX + "px")
+                       .style("top", d3.event.pageY - 70 + "px")
+         			  .style("opacity",1)
+         			  .style("border-radius","5px")
+         			  .style("border","2px solid #000;")
+                       .html("<small>"+(d.uscity) + "<br>" + "Killed:" + (d.value)+"</small>");
+                 })
+             		.on("mouseout", function(d){ tooltip.style("opacity", 0);});
+             });
+      </script>
+      <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+      
+      <script src="scripts/tooltip.js"></script>	
+      <script src="scripts/bubble_chart.js"></script>
+   </body>
 </html>

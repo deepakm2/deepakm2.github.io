@@ -57,15 +57,28 @@ function bubbleChart() {
 
 
 
-  var fillColor =
-    d3.scaleOrdinal()
-        .domain(["Dessert", "Drink", "Food", "Sides"])
-        .range(["#FF6138", "#FFFF9D", "#BEEB9F", "#00A388"]);
+ // var fillColor = d3.scaleOrdinal()
+  //.domain([1, 2, 3])
+  //.range(["#2c7bb6", "#ffff8c", "#d7191c"]);
+  
+  //   d3.scale.linear()
+     //   .domain([1500,2500,3500,5000])
+       //  .range(["#FF6138", "#FFFF9D", "#BEEB9F", "#00A388"]);
 
-
+ //var fillColor =
+  //  d3.scaleOrdinal()
+  //      .domain(["1","2","3"])
+    //    .range(["yellow",  "orange", "red"]);
+		
+	var fillColor =	d3.scaleLinear()
+        .domain([1000,2000,3000,4000])
+        .range(["green","yellow","orange", "red"]);
+	   
+	   
+	   
   function createNodes(rawData) {
 
-    var maxAmount = d3.max(rawData, function (d) { return +d.counts; });
+    var maxAmount = d3.max(rawData, function (d) { return +d.killed; });
 
 
     var radiusScale = d3.scalePow()
@@ -76,12 +89,12 @@ function bubbleChart() {
 
     var myNodes = rawData.map(function (d) {
       return {
-        id: d.id,
-        radius: radiusScale(+d.counts),
-        value: +d.counts,
-        name: d.name,
-        group: d.group,
-        year: d.age_group,
+        id: d.city,
+        radius: radiusScale(+d.killed),
+        value: +d.killed,
+        name: d.city,
+        group: d.category,
+        year: d.category,
         x: Math.random() * 900,
         y: Math.random() * 800
       };
@@ -120,8 +133,8 @@ function bubbleChart() {
     var bubblesE = bubbles.enter().append('circle')
       .classed('bubble', true)
       .attr('r', 0)
-      .attr('fill', function (d,i){ return fillColor(d.group); })
-      .attr('stroke', function (d,i) { return d3.rgb(fillColor(d.group)).darker(); })
+      .attr('fill', function (d,i){ return fillColor(+d.value); })
+      .attr('stroke', function (d,i) { return d3.rgb(fillColor(+d.value)).darker(); })
       .attr('stroke-width', 2)
       .on('mouseover', showDetail)
       .on('mouseout', hideDetail);
@@ -206,7 +219,7 @@ function bubbleChart() {
    * Hides Year title displays.
    */
   function hideYearTitles() {
-    svg.selectAll('.year').remove();
+    svg.selectAll('.killedCategories').remove();
   }
 
   /*
@@ -220,17 +233,17 @@ function bubbleChart() {
       .data(yearsData);
 
     years.enter().append('text')
-      .attr('class', 'year')
+      .attr('class', 'killedCategories')
       .attr('x', function (d) { return yearsTitleX[d]; })
       .attr('y', 40)
       .attr('text-anchor', 'middle')
       .text(function (d) {
           if(d==1){
-              return ">100 years"
+              return "Low"
           }if(d==2){
-              return "75 - 100 years"
+              return "Medium"
           }if(d==3){
-              return "<75 years"
+              return "High"
           }
           return d; });
   }
@@ -244,10 +257,10 @@ function bubbleChart() {
     // change outline to indicate hover state.
     d3.select(this).attr('stroke', 'black');
 
-    var content = '<span class="name">Dish Name: </span><span class="value">' +
+    var content = '<span class="name">City: </span><span class="value">' +
                   d.name +
                   '</span><br/>' +
-                  '<span class="name">Total Appearances on all Menus: </span><span class="value">' +
+                  '<span class="name">Killed: </span><span class="value">' +
                   addCommas(d.value) +
                   '</span><br/>';
 
@@ -260,7 +273,7 @@ function bubbleChart() {
   function hideDetail(d,i) {
     // reset outline
     d3.select(this)
-      .attr('stroke', d3.rgb(fillColor(d.group)).darker());
+      .attr('stroke', d3.rgb(fillColor(+d.value)).darker());
 
     tooltip.hideTooltip();
   }
@@ -273,7 +286,7 @@ function bubbleChart() {
    * displayName is expected to be a string and either 'year' or 'all'.
    */
   chart.toggleDisplay = function (displayName) {
-    if (displayName === 'year') {
+    if (displayName === 'killedCategories') {
       splitBubbles();
     } else {
       groupBubbles();
@@ -347,7 +360,7 @@ function addCommas(nStr) {
 }
 
 // Load the data.
-d3.csv('Data/Dish.csv', display);
+d3.csv('Data/gunDeath.csv', display);
 
 // setup the buttons.
 setupButtons();
