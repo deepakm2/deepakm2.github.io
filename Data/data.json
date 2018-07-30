@@ -1,0 +1,8 @@
+ [
+   {"uscity" : "California", "value": 5562},
+  {"uscity" : "Texas", "value": 5046},
+
+  {"uscity" : "Florida", "value": 3909},
+   {"uscity" : "Illinois", "value": 3409},
+   {"uscity" : "Ohio", "value": 2508}
+]
